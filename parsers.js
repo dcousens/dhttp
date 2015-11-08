@@ -26,7 +26,11 @@ function json (response, limit, callback) {
   text(response, limit, function (err, text) {
     if (err) return callback(err)
 
-    callback(null, JSON.parse(text))
+    try {
+      callback(null, JSON.parse(text))
+    } catch (e) {
+      callback(e)
+    }
   })
 }
 
