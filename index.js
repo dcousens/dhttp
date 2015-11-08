@@ -1,7 +1,7 @@
 var bodyParser = require('body-parser')
 var url = require('url')
 
-const CONTENT_PARSER_MAP = {
+const CONTENT_TYPE_PARSERS = {
   'application/json': bodyParser.json,
   'application/x-www-form-urlencoded': bodyParser.urlencoded,
   'text/plain': bodyParser.text
@@ -35,21 +35,24 @@ function request (http, options, callback) {
       headers: response.headers,
       statusCode: response.statusCode
     }
+    var parser = CONTENT_TYPE_PARSERS[result.headers['content-type']]
 
-    var parser = CONTENT_PARSER_MAP[result.headers['content-type']]
+    if (parser) {
+      parser(options.parser)(response, {}, function (err) {
+        if (err) return callback(err)
+        if (response.body) {
+          result.body = response.body`
+        }
 
-    parser(options.parser)(response, {}, function (err) {
-      if (err) return callback(err)
-      if (response.body) {
-        result.body = response.body`
-      }
+        if (timeout) {
+          clearTimeout(timeout)
+        }
 
-      if (timeout) {
-        clearTimeout(timeout)
-      }
-
+        callback(null, result)
+      })
+    } else {
       callback(null, result)
-    })
+    }
   })
 
   if (options.body) {
