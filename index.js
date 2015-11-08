@@ -20,7 +20,9 @@ function request (http, options, callback) {
     Object.assign(options, url.parse(options.url))
   }
 
+  options.headers = options.headers || {}
   if (options.body && !options.headers['content-type']) {
+    // don't mutate
     options.headers = Object.assign({}, options.headers)
     options.headers['content-type'] = CONTENT_TYPE_MAP[typeof options.body]
   }
