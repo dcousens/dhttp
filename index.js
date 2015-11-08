@@ -1,10 +1,10 @@
-var bodyParser = require('body-parser')
+var parsers = require('./parsers')
 var url = require('url')
 
 const CONTENT_TYPE_PARSERS = {
-  'application/json': bodyParser.json,
-  'application/x-www-form-urlencoded': bodyParser.urlencoded,
-  'text/plain': bodyParser.text
+  'application/json': parsers.json,
+  'text/plain': parsers.text,
+  'application/octet-stream': parsers.raw
 }
 
 const CONTENT_TYPE_MAP = {
@@ -33,6 +33,9 @@ function request (http, options, callback) {
 
   var timeout
   var request = http.request(options, function (response) {
+    var length = response.headers['content-length']
+    if (options.limit && length > options.limit) return callback(new Error('Content-Length exceeded limit'))
+
     function fin (err) {
       if (err) return callback(err)
 
@@ -53,12 +56,9 @@ function request (http, options, callback) {
     }
 
     var parser = CONTENT_TYPE_PARSERS[response.headers['content-type']]
+    if (parser) return parser(response, length, fin)
 
-    if (parser) {
-      parser(options.parser)(response, {}, fin)
-    } else {
-      fin()
-    }
+    fin()
   })
 
   if (options.timeout) {

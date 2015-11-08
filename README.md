@@ -26,6 +26,4 @@ dhttp(http, {
 })
 ```
 
-Uses `body-parser` under the hood, use `parser` to pass relevant options through (which also results in getting `gzip` support for free)
-
 ## LICENSE [MIT](LICENSE)
