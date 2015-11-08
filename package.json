@@ -1,19 +1,19 @@
 {
-  "name": "sane-http",
+  "name": "dhttp",
   "version": "1.0.0",
   "description": "Just another biased browserify-compatible HTTP/HTTPS wrapper",
   "author": "Daniel Cousens",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dcousens/sane-http.git"
+    "url": "https://github.com/dcousens/dhttp.git"
   },
   "bugs": {
-    "url": "https://github.com/dcousens/sane-http/issues"
+    "url": "https://github.com/dcousens/dhttp/issues"
   },
-  "homepage": "https://github.com/dcousens/sane-http",
+  "homepage": "https://github.com/dcousens/dhttp",
   "keywords": [
-    "sane-http"
+    "dhttp"
   ],
   "main": "index.js",
   "scripts": {

@@ -2,11 +2,11 @@
 
 // var assert = require('assert')
 var http = require('http')
-var saneHttp = require('../')
+var dhttp = require('../')
 
-describe('sane-http', function () {
+describe('dhttp', function () {
   it('it works', function (done) {
-    saneHttp(http, {
+    dhttp(http, {
       method: 'GET',
       url: 'http://localhost:8000',
       body: { a: 1 }
