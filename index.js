@@ -61,10 +61,6 @@ function request (http, options, callback) {
     }
   })
 
-  if (options.body) {
-    request.end(options.body)
-  }
-
   if (options.timeout) {
     timeout = setTimeout(function () {
       request.abort()
@@ -72,6 +68,8 @@ function request (http, options, callback) {
       callback(new Error('ETIMEDOUT'))
     }, options.timeout)
   }
+
+  request.end(options.body)
 }
 
 module.exports = request
