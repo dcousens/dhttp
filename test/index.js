@@ -17,4 +17,16 @@ describe('dhttp', function () {
       done()
     })
   })
+
+  it('it works 2', function (done) {
+    dhttp(http, {
+      method: 'GET',
+      url: 'http://localhost:8000'
+    }, function (err, res) {
+      if (err) return done(err)
+      if (res.statusCode !== 200) return done(new Error('Expected 200'))
+
+      done()
+    })
+  })
 })
