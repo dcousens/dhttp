@@ -30,16 +30,13 @@ function request (http, options, callback) {
     var length = response.headers['content-length']
     if (options.limit && length > options.limit) return callback(new Error('Content-Length exceeded limit'))
 
-    function fin (err) {
+    function fin (err, body) {
       if (err) return callback(err)
 
       var result = {
+        statusCode: response.statusCode,
         headers: response.headers,
-        statusCode: response.statusCode
-      }
-
-      if (response.body) {
-        result.body = response.body
+        body: body
       }
 
       if (timeout) {
