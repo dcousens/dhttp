@@ -35,23 +35,27 @@ function request (http, options, callback) {
       headers: response.headers,
       statusCode: response.statusCode
     }
+
+    function fin (err) {
+      if (err) return callback(err)
+
+      if (response.body) {
+        result.body = response.body
+      }
+
+      if (timeout) {
+        clearTimeout(timeout)
+      }
+
+      callback(null, result)
+    }
+
     var parser = CONTENT_TYPE_PARSERS[result.headers['content-type']]
 
     if (parser) {
-      parser(options.parser)(response, {}, function (err) {
-        if (err) return callback(err)
-        if (response.body) {
-          result.body = response.body`
-        }
-
-        if (timeout) {
-          clearTimeout(timeout)
-        }
-
-        callback(null, result)
-      })
+      parser(options.parser)(response, {}, fin)
     } else {
-      callback(null, result)
+      fin()
     }
   })
 
