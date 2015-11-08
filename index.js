@@ -1,12 +1,6 @@
 var parsers = require('./parsers')
 var url = require('url')
 
-const CONTENT_TYPE_PARSERS = {
-  'application/json': parsers.json,
-  'text/plain': parsers.text,
-  'application/octet-stream': parsers.raw
-}
-
 const CONTENT_TYPE_MAP = {
   'object': 'application/json',
   'string': 'text/plain'
@@ -55,8 +49,12 @@ function request (http, options, callback) {
       callback(null, result)
     }
 
-    var parser = CONTENT_TYPE_PARSERS[response.headers['content-type']]
-    if (parser) return parser(response, length, fin)
+    var contentType = response.headers['content-type']
+    if (contentType) {
+      if (/application\/json/.test(contentType)) return parsers.json(response, length, fin)
+      if (/text\/plain/.test(contentType)) return parsers.json(response, length, fin)
+      if (/application\/octet-stream/.test(contentType)) return parsers.json(response, length, fin)
+    }
 
     fin()
   })
