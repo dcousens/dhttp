@@ -13,16 +13,16 @@ const CONTENT_TYPE_MAP = {
 }
 
 function request (http, options, callback) {
-  // copy options
+  // don't mutate
   options = Object.assign({}, options)
 
   if (options.url) {
     Object.assign(options, url.parse(options.url))
   }
 
-  var headers = Object.assign({}, options.headers)
-  if (options.body && !headers['content-type']) {
-    headers['content-type'] = CONTENT_TYPE_MAP[typeof options.body]
+  if (options.body && !options.headers['content-type']) {
+    options.headers = Object.assign({}, options.headers)
+    options.headers['content-type'] = CONTENT_TYPE_MAP[typeof options.body]
   }
 
   if (typeof options.body === 'object') {
@@ -31,13 +31,13 @@ function request (http, options, callback) {
 
   var timeout
   var request = http.request(options, function (response) {
-    var result = {
-      headers: response.headers,
-      statusCode: response.statusCode
-    }
-
     function fin (err) {
       if (err) return callback(err)
+
+      var result = {
+        headers: response.headers,
+        statusCode: response.statusCode
+      }
 
       if (response.body) {
         result.body = response.body
@@ -50,7 +50,7 @@ function request (http, options, callback) {
       callback(null, result)
     }
 
-    var parser = CONTENT_TYPE_PARSERS[result.headers['content-type']]
+    var parser = CONTENT_TYPE_PARSERS[response.headers['content-type']]
 
     if (parser) {
       parser(options.parser)(response, {}, fin)
