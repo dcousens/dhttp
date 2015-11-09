@@ -14,15 +14,19 @@ function request (http, options, callback) {
     Object.assign(options, url.parse(options.url))
   }
 
-  options.headers = options.headers || {}
-  if (options.body && !options.headers['content-type']) {
-    // don't mutate
-    options.headers = Object.assign({}, options.headers)
-    options.headers['content-type'] = CONTENT_TYPE_MAP[typeof options.body]
-  }
+  if (options.body !== undefined) {
+    var typeOf = typeof options.body
 
-  if (typeof options.body === 'object') {
-    options.body = JSON.stringify(options.body)
+    options.headers = options.headers || {}
+    if (!options.headers['content-type']) {
+      // don't mutate
+      options.headers = Object.assign({}, options.headers)
+      options.headers['content-type'] = CONTENT_TYPE_MAP[typeOf]
+    }
+
+    if (typeOf !== 'string') {
+      options.body = JSON.stringify(options.body)
+    }
   }
 
   var timeout
