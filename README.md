@@ -19,6 +19,7 @@ dhttp(http, {
 	method: 'GET',
 	url: 'http://localhost:8000'
 }, function (err, res) {
+	if (err) return
 	if (res.statusCode !== 200) return
 	if (res.headers['content-type'] !== 'application/json') return
 

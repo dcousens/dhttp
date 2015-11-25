@@ -1,7 +1,6 @@
 var parsers = require('./parsers')
 var url = require('url')
-
-const CONTENT_TYPE_MAP = {
+var CONTENT_TYPE_MAP = {
   'object': 'application/json',
   'string': 'text/plain'
 }
