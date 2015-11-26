@@ -5,7 +5,12 @@ var CONTENT_TYPE_MAP = {
   'string': 'text/plain'
 }
 
-function request (http, options, callback) {
+function request (protocol, options, callback) {
+  function done () {
+    if (callback) callback()
+    callback = undefined
+  }
+
   // don't mutate
   options = Object.assign({}, options)
 
@@ -29,12 +34,12 @@ function request (http, options, callback) {
   }
 
   var timeout
-  var request = http.request(options, function (response) {
+  var request = protocol.request(options, function (response) {
     var length = response.headers['content-length']
-    if (options.limit && length > options.limit) return callback(new Error('Content-Length exceeded limit'))
+    if (options.limit && length > options.limit) return done(new Error('Content-Length exceeded limit'))
 
-    function fin (err, body) {
-      if (err) return callback(err)
+    function handle (err, body) {
+      if (err) return done(err)
 
       var result = {
         statusCode: response.statusCode,
@@ -46,24 +51,26 @@ function request (http, options, callback) {
         clearTimeout(timeout)
       }
 
-      callback(null, result)
+      done(null, result)
     }
 
     var contentType = response.headers['content-type']
     if (contentType) {
-      if (/application\/json/.test(contentType)) return parsers.json(response, length, fin)
-      if (/text\/plain/.test(contentType)) return parsers.text(response, length, fin)
-      if (/application\/octet-stream/.test(contentType)) return parsers.raw(response, length, fin)
+      if (/application\/json/.test(contentType)) return parsers.json(response, length, handle)
+      if (/text\/plain/.test(contentType)) return parsers.text(response, length, handle)
+      if (/application\/octet-stream/.test(contentType)) return parsers.raw(response, length, handle)
     }
 
-    fin()
+    handle()
   })
+
+  request.on('error', done)
 
   if (options.timeout) {
     timeout = setTimeout(function () {
       request.abort()
 
-      callback(new Error('ETIMEDOUT'))
+      done(new Error('ETIMEDOUT'))
     }, options.timeout)
   }
 
