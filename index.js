@@ -6,8 +6,8 @@ var CONTENT_TYPE_MAP = {
 }
 
 function request (protocol, options, callback) {
-  function done () {
-    if (callback) callback()
+  function done (err, res) {
+    if (callback) callback(err, res)
     callback = undefined
   }
 
