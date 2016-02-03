@@ -57,7 +57,7 @@ function request (protocol, options, callback) {
     var contentType = response.headers['content-type']
     if (contentType) {
       if (/application\/json/.test(contentType)) return parsers.json(response, length, handle)
-      if (/text\/plain/.test(contentType)) return parsers.text(response, length, handle)
+      if (/text\/(plain|html)/.test(contentType)) return parsers.text(response, length, handle)
       if (/application\/octet-stream/.test(contentType)) return parsers.raw(response, length, handle)
     }
 
