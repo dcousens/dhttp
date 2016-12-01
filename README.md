@@ -5,17 +5,17 @@
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
-Just another biased browserify-compatible HTTP/HTTPS wrapper
+Just another biased browserify-compatible HTTP/HTTPS/XHR wrapper.
+No compatability with IE.
 
 
 ## Example
 
 ``` javascript
 var dhttp = require('dhttp')
-var http = require('http')
 
 // ...
-dhttp(http, {
+dhttp({
 	method: 'GET',
 	url: 'http://localhost:8000'
 }, function (err, res) {
