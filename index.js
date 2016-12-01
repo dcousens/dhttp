@@ -10,7 +10,7 @@ var PROTOCOLS = {
   'https:': require('https')
 }
 
-function request (options, callback) {
+module.exports = function (options, callback) {
   function done (err, res) {
     if (callback) callback(err, res)
     callback = undefined
@@ -86,5 +86,3 @@ function request (options, callback) {
 
   request.end(options.body)
 }
-
-module.exports = request
