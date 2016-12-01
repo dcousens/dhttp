@@ -81,7 +81,7 @@ module.exports = function (options, callback) {
   var xhr = new window.XMLHttpRequest()
   xhr.open(options.method, options.url, true)
 
-  if (options.header !== undefined && xhr.setRequestHeader) {
+  if (options.headers !== undefined && xhr.setRequestHeader) {
     for (var key in options.headers) {
       xhr.setRequestHeader(key, options.headers[key])
     }
