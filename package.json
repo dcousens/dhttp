@@ -30,7 +30,9 @@
     "bundle-test": "browserify test/index.js > test/bundle.js",
     "unit": "tape test/*.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "parse-headers": "^2.0.1"
+  },
   "devDependencies": {
     "nyc": "^6.4.0",
     "standard": "*",

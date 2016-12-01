@@ -1,4 +1,4 @@
-var parsers = require('./parsers')
+var parseHeaders = require('parse-headers')
 var url = require('url')
 var CONTENT_TYPE_MAP = {
   'object': 'application/json',
@@ -38,6 +38,7 @@ module.exports = function (options, callback) {
     if (this.readyState < 2) return
 
     var headers = xhr.getAllResponseHeaders()
+    headers = parseHeaders(headers)
 
     var length = headers['content-length']
     if (options.limit && length > options.limit) return done(new Error('Content-Length exceeded limit'))
