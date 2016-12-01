@@ -6,7 +6,9 @@ var CONTENT_TYPE_MAP = {
 }
 
 module.exports = function (options, callback) {
+  var timeout
   function done (err, res) {
+    if (timeout) clearTimeout(timeout)
     if (callback) callback(err, res)
     callback = undefined
   }
@@ -33,7 +35,6 @@ module.exports = function (options, callback) {
     }
   }
 
-  var timeout
   function ready () {
     if (this.readyState < 2) return
 
@@ -51,10 +52,6 @@ module.exports = function (options, callback) {
       body: xhr.response
     }
 
-    if (timeout) {
-      clearTimeout(timeout)
-    }
-
     var contentType = headers['content-type']
     if (contentType) {
       if (/application\/json/.test(contentType)) {
@@ -67,7 +64,7 @@ module.exports = function (options, callback) {
       }
     }
 
-    callback(null, result)
+    done(null, result)
   }
 
   if (options.timeout) {

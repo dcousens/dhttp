@@ -11,7 +11,9 @@ var PROTOCOLS = {
 }
 
 module.exports = function (options, callback) {
+  var timeout
   function done (err, res) {
+    if (timeout) clearTimeout(timeout)
     if (callback) callback(err, res)
     callback = undefined
   }
@@ -43,7 +45,6 @@ module.exports = function (options, callback) {
     protocol = PROTOCOLS[options.protocol]
   }
 
-  var timeout
   var request = protocol.request(options, function (response) {
     var length = response.headers['content-length']
     if (options.limit && length > options.limit) return done(new Error('Content-Length exceeded limit'))
@@ -55,10 +56,6 @@ module.exports = function (options, callback) {
         statusCode: response.statusCode,
         headers: response.headers,
         body: body
-      }
-
-      if (timeout) {
-        clearTimeout(timeout)
       }
 
       done(null, result)
