@@ -1,32 +1,28 @@
-/* global describe, it */
-
-// var assert = require('assert')
 var http = require('http')
 var dhttp = require('../')
+var tape = require('tape')
 
-describe('dhttp', function () {
-  it('it works', function (done) {
-    dhttp(http, {
-      method: 'GET',
-      url: 'http://localhost:8000',
-      body: { a: 1 }
-    }, function (err, res) {
-      if (err) return done(err)
-      if (res.statusCode !== 200) return done(new Error('Expected 200'))
+tape('dhttp', function (t) {
+  t.plan(2)
 
-      done()
-    })
+  dhttp(http, {
+    method: 'GET',
+    url: 'http://localhost:8000',
+    body: { a: 1 }
+  }, function (err, res) {
+    if (err) return t.error(err)
+    if (res.statusCode !== 200) return t.error(new Error('Expected 200'))
+
+    t.pass()
   })
 
-  it('it works 2', function (done) {
-    dhttp(http, {
-      method: 'GET',
-      url: 'http://localhost:8000'
-    }, function (err, res) {
-      if (err) return done(err)
-      if (res.statusCode !== 200) return done(new Error('Expected 200'))
+  dhttp(http, {
+    method: 'GET',
+    url: 'http://localhost:8000'
+  }, function (err, res) {
+    if (err) return t.error(err)
+    if (res.statusCode !== 200) return t.error(new Error('Expected 200'))
 
-      done()
-    })
+    t.pass()
   })
 })

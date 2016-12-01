@@ -17,31 +17,16 @@
   ],
   "main": "index.js",
   "scripts": {
-    "coverage": "mocha --require blanket -R travis-cov",
-    "coverage-local": "mocha --require blanket -R html-cov",
+    "coverage-report": "nyc report --reporter=lcov",
+    "coverage": "nyc --check-coverage --branches 90 --functions 90 npm run unit",
     "standard": "standard",
-    "test": "npm run standard && npm run unit",
-    "unit": "mocha"
-  },
-  "config": {
-    "blanket": {
-      "pattern": [
-        ""
-      ],
-      "data-cover-never": [
-        "node_modules",
-        "test"
-      ]
-    },
-    "travis-cov": {
-      "threshold": 100
-    }
+    "test": "npm run standard && npm run coverage",
+    "unit": "tape test/*.js"
   },
   "dependencies": {},
   "devDependencies": {
-    "blanket": "*",
-    "mocha": "*",
+    "nyc": "^6.4.0",
     "standard": "*",
-    "travis-cov": "*"
+    "tape": "^4.6.2"
   }
 }
