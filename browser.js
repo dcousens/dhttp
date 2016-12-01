@@ -79,6 +79,9 @@ module.exports = function (options, callback) {
   }
 
   var xhr = new window.XMLHttpRequest()
+  xhr.onreadystatechange = ready
+  xhr.onerror = done
+
   xhr.open(options.method, options.url, true)
 
   if (options.headers !== undefined && xhr.setRequestHeader) {
@@ -87,7 +90,5 @@ module.exports = function (options, callback) {
     }
   }
 
-  xhr.onreadystatechange = ready
-  xhr.onerror = done
   xhr.send(options.body)
 }
