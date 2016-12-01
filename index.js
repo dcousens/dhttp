@@ -5,7 +5,12 @@ var CONTENT_TYPE_MAP = {
   'string': 'text/plain'
 }
 
-function request (protocol, options, callback) {
+var PROTOCOLS = {
+  'http:': require('http'),
+  'https:': require('https')
+}
+
+function request (options, callback) {
   function done (err, res) {
     if (callback) callback(err, res)
     callback = undefined
@@ -31,6 +36,11 @@ function request (protocol, options, callback) {
     if (typeOf !== 'string') {
       options.body = JSON.stringify(options.body)
     }
+  }
+
+  var protocol
+  if (options.protocol !== undefined) {
+    protocol = PROTOCOLS[options.protocol]
   }
 
   var timeout

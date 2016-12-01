@@ -1,11 +1,10 @@
-var http = require('http')
 var dhttp = require('../')
 var tape = require('tape')
 
 tape('dhttp', function (t) {
   t.plan(2)
 
-  dhttp(http, {
+  dhttp({
     method: 'GET',
     url: 'http://localhost:8000',
     body: { a: 1 }
@@ -16,7 +15,7 @@ tape('dhttp', function (t) {
     t.pass()
   })
 
-  dhttp(http, {
+  dhttp({
     method: 'GET',
     url: 'http://localhost:8000'
   }, function (err, res) {
