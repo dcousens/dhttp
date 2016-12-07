@@ -8,6 +8,10 @@ var CONTENT_TYPE_MAP = {
 module.exports = function (options, callback) {
   var timeout
   function done (err, res) {
+    if (!(err instanceof Error)) {
+      err = new Error('' + (err || 'Unknown XMLHttpRequest Error'))
+    }
+
     if (timeout) clearTimeout(timeout)
     if (callback) callback(err, res)
     callback = undefined
