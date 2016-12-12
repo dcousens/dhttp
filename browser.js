@@ -49,18 +49,22 @@ module.exports = function (options, callback) {
     var result = {
       statusCode: xhr.status,
       headers: headers,
-      body: xhr.response
+      body: new Buffer(xhr.response)
     }
 
     var contentType = headers['content-type']
     if (contentType) {
+      if (/plain\/text/.test(contentType) ||
+          /text\/html/.test(contentType)) {
+        result.body = result.body.toString('utf8')
+      }
+
       if (/application\/json/.test(contentType)) {
+        result.body = result.body.toString('utf8')
+
         try {
           result.body = JSON.parse(result.body)
         } catch (e) { return done(e) }
-      }
-      if (/application\/octet-stream/.test(contentType)) {
-        result.body = new Buffer(result.body, 'utf-8')
       }
     }
 
@@ -78,6 +82,7 @@ module.exports = function (options, callback) {
   var xhr = new window.XMLHttpRequest()
   xhr.onreadystatechange = ready
   xhr.onerror = done
+  xhr.responseType = 'arraybuffer'
 
   xhr.open(options.method, options.url, true)
 
