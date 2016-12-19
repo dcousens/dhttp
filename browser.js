@@ -49,7 +49,7 @@ module.exports = function (options, callback) {
     var result = {
       statusCode: xhr.status,
       headers: headers,
-      body: new Buffer(xhr.response)
+      body: Buffer.from(xhr.response || '')
     }
 
     var contentType = headers['content-type']
