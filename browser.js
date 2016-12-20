@@ -54,11 +54,7 @@ module.exports = function (options, callback) {
 
     var contentType = headers['content-type']
     if (contentType) {
-      if (/plain\/text/.test(contentType) ||
-          /text\/html/.test(contentType)) {
-        result.body = result.body.toString('utf8')
-      }
-
+      if (/text\/(plain|html)/.test(contentType)) result.body = result.body.toString('utf8')
       if (/application\/json/.test(contentType)) {
         result.body = result.body.toString('utf8')
 
