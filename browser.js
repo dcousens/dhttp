@@ -46,22 +46,23 @@ module.exports = function (options, callback) {
 
     if (this.readyState !== 4) return
 
+    var body = Buffer.from(xhr.response || '')
     var result = {
       statusCode: xhr.status,
-      headers: headers,
-      body: Buffer.from(xhr.response || '')
+      headers: headers
     }
 
     var contentType = headers['content-type']
     if (contentType) {
-      if (/text\/(plain|html)/.test(contentType)) result.body = result.body.toString('utf8')
-      if (/application\/json/.test(contentType)) {
-        result.body = result.body.toString('utf8')
+      if (options.json || /application\/json/.test(contentType)) {
+        body = Buffer.from(body).toString('utf8')
 
         try {
-          result.body = JSON.parse(result.body)
+          result.body = JSON.parse(body)
         } catch (e) { return done(e) }
       }
+      if (options.text || /text\/(plain|html)/.test(contentType)) result.body = body.toString('utf8')
+      if (options.raw) result.body = body
     }
 
     done(null, result)
