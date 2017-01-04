@@ -55,7 +55,7 @@ module.exports = function (options, callback) {
       var result = {
         statusCode: response.statusCode,
         headers: response.headers,
-        body: body
+        body: body || null
       }
 
       done(null, result)

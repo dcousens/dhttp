@@ -60,9 +60,13 @@ module.exports = function (options, callback) {
         try {
           result.body = JSON.parse(body)
         } catch (e) { return done(e) }
+      } else if (options.text || /text\/(plain|html)/.test(contentType)) {
+        result.body = body.toString('utf8')
+      } else if (options.raw || /application\/octet-stream/.test(contentType)) {
+        result.body = body
+      } else {
+        result.body = null
       }
-      if (options.text || /text\/(plain|html)/.test(contentType)) result.body = body.toString('utf8')
-      if (options.raw) result.body = body
     }
 
     done(null, result)
