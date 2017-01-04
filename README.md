@@ -23,6 +23,9 @@ dhttp({
 	if (res.statusCode !== 200) return
 	if (res.headers['content-type'] !== 'application/json') return
 
+	console.log(res.body)
+	// => { foo: 'bar' }, a parsed JSON object
+	
 	// ...
 })
 ```
