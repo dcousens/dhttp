@@ -8,15 +8,6 @@
 Just another biased browserify-compatible HTTP/HTTPS/XHR wrapper.
 No compatability with IE.
 
-`err` is only provided if the connection died.
-Check `statusCode` otherwise.
-
-If `body` was not parsed, it will be `null`.
-
-Set `raw: true` to return `body` as a `Buffer`.
-Set `text: true` to parse `body` as `UTF8` text.
-Set `json: true` to parse `body` as a JSON object.
-
 ## Example
 
 ``` javascript
@@ -27,10 +18,38 @@ dhttp({
 	method: 'GET',
 	url: 'http://localhost:8000'
 }, function (err, res) {
+	// err is only provided if the connection failed in some way
 	if (err) return
 	if (res.statusCode !== 200) return
 	if (res.headers['content-type'] !== 'application/json') return
 
+	// if `content-type` was unknown, expect body to be `null` (unless an override is given).
+	console.log(res.body)
+	// => { foo: 'bar' }, a parsed JSON object
+	
+	// ...
+})
+```
+
+Use overrides to force a `content-type`.
+
+``` javascript
+var dhttp = require('dhttp')
+
+// ...
+dhttp({
+	method: 'GET',
+	url: 'http://localhost:8000',
+	json: true, // `true` to parse `body` as a JSON object
+	text: false, // `true` to parse `body` as `UTF8` text
+	raw: false, // `true` to return `body` as a `Buffer`
+}, function (err, res) {
+	// err is only provided if the connection failed in some way
+	if (err) return
+	if (res.statusCode !== 200) return
+	if (res.headers['content-type'] !== 'application/json') return
+
+	// if `content-type` was unknown, expect body to be `null` (unless an override is given).
 	console.log(res.body)
 	// => { foo: 'bar' }, a parsed JSON object
 	
