@@ -61,11 +61,16 @@ module.exports = function (options, callback) {
       done(null, result)
     }
 
+    // override
+    if (options.json) return parsers.json(response, length, handle)
+    if (options.text) return parsers.text(response, length, handle)
+    if (options.raw) return parsers.raw(response, length, handle)
+
     var contentType = response.headers['content-type']
     if (contentType) {
-      if (options.json || /application\/json/.test(contentType)) return parsers.json(response, length, handle)
-      if (options.text || /text\/(plain|html)/.test(contentType)) return parsers.text(response, length, handle)
-      if (options.raw || /application\/octet-stream/.test(contentType)) return parsers.raw(response, length, handle)
+      if (/application\/json/.test(contentType)) return parsers.json(response, length, handle)
+      if (/text\/(plain|html)/.test(contentType)) return parsers.text(response, length, handle)
+      if (/application\/octet-stream/.test(contentType)) return parsers.raw(response, length, handle)
     }
 
     handle()

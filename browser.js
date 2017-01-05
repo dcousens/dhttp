@@ -5,6 +5,27 @@ var CONTENT_TYPE_MAP = {
   'string': 'text/plain'
 }
 
+function returnJSON (result, body, callback) {
+  try {
+    body = Buffer.from(body).toString('utf8')
+    result.body = JSON.parse(body)
+  } catch (e) {
+    return callback(e)
+  }
+
+  callback(null, result)
+}
+
+function returnUTF8 (result, body, callback) {
+  result.body = body.toString('utf8')
+  return callback(null, result)
+}
+
+function returnRaw (result, body, callback) {
+  result.body = body
+  return callback(null, result)
+}
+
 module.exports = function (options, callback) {
   var timeout
   function done (err, res) {
@@ -48,25 +69,21 @@ module.exports = function (options, callback) {
 
     var body = Buffer.from(xhr.response || '')
     var result = {
-      statusCode: xhr.status,
-      headers: headers
+      body: null,
+      headers: headers,
+      statusCode: xhr.status
     }
+
+    // override
+    if (options.json) return returnJSON(result, body, done)
+    else if (options.text) return returnUTF8(result, body, done)
+    else if (options.raw) return returnRaw(result, body, done)
 
     var contentType = headers['content-type']
     if (contentType) {
-      if (options.json || /application\/json/.test(contentType)) {
-        body = Buffer.from(body).toString('utf8')
-
-        try {
-          result.body = JSON.parse(body)
-        } catch (e) { return done(e) }
-      } else if (options.text || /text\/(plain|html)/.test(contentType)) {
-        result.body = body.toString('utf8')
-      } else if (options.raw || /application\/octet-stream/.test(contentType)) {
-        result.body = body
-      } else {
-        result.body = null
-      }
+      if (/application\/json/.test(contentType)) return returnJSON(result, body, done)
+      if (/text\/(plain|html)/.test(contentType)) return returnUTF8(result, body, done)
+      if (/application\/octet-stream/.test(contentType)) return returnRaw(result, body, done)
     }
 
     done(null, result)
