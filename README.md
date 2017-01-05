@@ -8,6 +8,14 @@
 Just another biased browserify-compatible HTTP/HTTPS/XHR wrapper.
 No compatability with IE.
 
+`err` is only provided if the connection died.
+Check `statusCode` otherwise.
+
+If `body` was not parsed, it will be `null`.
+
+Set `raw: true` to return `body` as a `Buffer`.
+Set `text: true` to parse `body` as `UTF8` text.
+Set `json: true` to parse `body` as a JSON object.
 
 ## Example
 
