@@ -18,7 +18,8 @@ dhttp({
 	method: 'GET',
 	url: 'http://localhost:8000'
 }, function (err, res) {
-	// err is only provided if the connection failed in some way, OR if the content body parsing failed in some way
+	// err is only provided if the connection failed in some way
+	// OR if the content body parsing failed in some way
 	if (err) return
 	if (res.statusCode !== 200) return
 	if (res.headers['content-type'] !== 'application/json') return
