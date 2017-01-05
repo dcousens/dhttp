@@ -8,6 +8,8 @@
 Just another biased browserify-compatible HTTP/HTTPS/XHR wrapper.
 No compatability with IE.
 
+Automatically parses `application/json`, `text/(plain|html)` and `application/octet-stream`,  use overrides for others.
+
 ## Example
 
 ``` javascript
@@ -24,7 +26,7 @@ dhttp({
 	if (res.statusCode !== 200) return
 	if (res.headers['content-type'] !== 'application/json') return
 
-	// if `content-type` was unknown, expect body to be `null` (unless an override is given).
+	// if `content-type` was not supported, expect body to be `null` (unless an override is given).
 	console.log(res.body)
 	// => { foo: 'bar' }, a parsed JSON object
 	
