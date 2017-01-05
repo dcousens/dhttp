@@ -18,7 +18,7 @@ dhttp({
 	method: 'GET',
 	url: 'http://localhost:8000'
 }, function (err, res) {
-	// err is only provided if the connection failed in some way
+	// err is only provided if the connection failed in some way, OR if the content body parsing failed in some way
 	if (err) return
 	if (res.statusCode !== 200) return
 	if (res.headers['content-type'] !== 'application/json') return
@@ -31,7 +31,7 @@ dhttp({
 })
 ```
 
-Use overrides to force a `content-type`.
+Use optional overrides to force a `content-type`.
 
 ``` javascript
 var dhttp = require('dhttp')
@@ -40,18 +40,19 @@ var dhttp = require('dhttp')
 dhttp({
 	method: 'GET',
 	url: 'http://localhost:8000',
-	json: true, // `true` to parse `body` as a JSON object
-	text: false, // `true` to parse `body` as `UTF8` text
-	raw: false, // `true` to return `body` as a `Buffer`
+	json: true, // optional, `true` parses `body` as a JSON object
+	text: false, // optional, `true` parses `body` as `UTF8` text
+	raw: false, // optional, `true` returns `body` as a `Buffer`
 }, function (err, res) {
-	// err is only provided if the connection failed in some way
 	if (err) return
 	if (res.statusCode !== 200) return
-	if (res.headers['content-type'] !== 'application/json') return
+	
+	// the content-type was actually an octet-stream!
+	if (res.headers['content-type'] !== 'application/octet-stream') return
 
-	// if `content-type` was unknown, expect body to be `null` (unless an override is given).
+	// no fear
 	console.log(res.body)
-	// => { foo: 'bar' }, a parsed JSON object
+	// => { foo: 'bar' }, a [force] parsed JSON object
 	
 	// ...
 })
