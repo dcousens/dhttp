@@ -56,6 +56,7 @@ module.exports = function (options, callback) {
     }
   }
 
+  var xhr
   function ready () {
     if (this.readyState < 2) return
 
@@ -73,6 +74,8 @@ module.exports = function (options, callback) {
       headers: headers,
       statusCode: xhr.status
     }
+
+    if (result.statusCode === 0) return done(new Error('Timeout'))
 
     // override
     if (options.json) return returnJSON(result, body, done)
@@ -97,7 +100,7 @@ module.exports = function (options, callback) {
     }, options.timeout)
   }
 
-  var xhr = new window.XMLHttpRequest()
+  xhr = new window.XMLHttpRequest()
   xhr.onreadystatechange = ready
   xhr.onerror = done
   xhr.responseType = 'arraybuffer'
