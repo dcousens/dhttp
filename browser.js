@@ -26,7 +26,7 @@ function returnRaw (result, body, callback) {
   return callback(null, result)
 }
 
-module.exports = function (options, callback) {
+module.exports = function request (options, callback) {
   var timeout
   function done (err, res) {
     if (timeout) clearTimeout(timeout)

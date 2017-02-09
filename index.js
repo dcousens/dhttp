@@ -10,7 +10,7 @@ var PROTOCOLS = {
   'https:': require('https')
 }
 
-module.exports = function (options, callback) {
+module.exports = function request (options, callback) {
   var timeout
   function done (err, res) {
     if (timeout) clearTimeout(timeout)
