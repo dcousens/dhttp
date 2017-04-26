@@ -7,7 +7,7 @@ var CONTENT_TYPE_MAP = {
 
 function returnJSON (result, body, callback) {
   try {
-    body = Buffer.from(body).toString('utf8')
+    body = body.toString('utf8')
     result.body = JSON.parse(body)
   } catch (e) {
     return callback(e)
