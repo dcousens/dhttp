@@ -61,4 +61,11 @@ dhttp({
 })
 ```
 
+To bypass `statusCode` handling, you can use `dhttp/200` which throws a descriptive error for any `statusCode` other than 200.
+
+``` javascript
+var dhttp = require('dhttp/200')
+// ...
+```
+
 ## LICENSE [MIT](LICENSE)
