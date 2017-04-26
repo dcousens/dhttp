@@ -67,8 +67,8 @@ module.exports = function request (options, callback) {
     if (options.limit && length > options.limit) return done(new Error('Content-Length exceeded limit'))
 
     if (this.readyState !== 4) return
-    if (xhr.status === 0) return done(new Error('Timeout'))
-    
+    if (xhr.status === 0) return done(new Error('ETIMEDOUT'))
+
     var body = Buffer.from(xhr.response || '')
     var result = {
       body: null,
