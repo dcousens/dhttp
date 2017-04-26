@@ -44,7 +44,7 @@ dhttp({
 	method: 'GET',
 	url: 'http://localhost:8000',
 	json: true, // optional, `true` parses `body` as a JSON object
-	text: false, // optional, `true` parses `body` as `UTF8` text
+	text: false, // optional, `true` parses `body` as UTF8 text
 	raw: false, // optional, `true` returns `body` as a `Buffer`
 }, function (err, res) {
 	if (err) return
