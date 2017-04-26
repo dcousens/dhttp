@@ -67,15 +67,14 @@ module.exports = function request (options, callback) {
     if (options.limit && length > options.limit) return done(new Error('Content-Length exceeded limit'))
 
     if (this.readyState !== 4) return
-
+    if (xhr.status === 0) return done(new Error('Timeout'))
+    
     var body = Buffer.from(xhr.response || '')
     var result = {
       body: null,
       headers: headers,
       statusCode: xhr.status
     }
-
-    if (result.statusCode === 0) return done(new Error('Timeout'))
 
     // override
     if (options.json) return returnJSON(result, body, done)
