@@ -1,4 +1,4 @@
-var Buffer = require('buffer')
+var Buffer = require('buffer').Buffer
 var parseHeaders = require('parse-headers')
 var url = require('url')
 var CONTENT_TYPE_MAP = {
