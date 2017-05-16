@@ -1,3 +1,4 @@
+var Buffer = require('buffer')
 var parseHeaders = require('parse-headers')
 var url = require('url')
 var CONTENT_TYPE_MAP = {
