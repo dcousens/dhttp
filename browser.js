@@ -1,10 +1,6 @@
 var Buffer = require('buffer').Buffer
 var parseHeaders = require('parse-headers')
-var url = require('url')
-var CONTENT_TYPE_MAP = {
-  'object': 'application/json',
-  'string': 'text/plain'
-}
+var augment = require('./augment')
 
 function returnJSON (result, body, callback) {
   try {
@@ -35,27 +31,7 @@ module.exports = function request (options, callback) {
     callback = undefined
   }
 
-  // don't mutate
-  options = Object.assign({}, options)
-
-  if (options.url) {
-    Object.assign(options, url.parse(options.url))
-  }
-
-  if (options.body !== undefined) {
-    var typeOf = typeof options.body
-
-    options.headers = options.headers || {}
-    if (!options.headers['content-type']) {
-      // don't mutate
-      options.headers = Object.assign({}, options.headers)
-      options.headers['content-type'] = CONTENT_TYPE_MAP[typeOf]
-    }
-
-    if (typeOf !== 'string') {
-      options.body = JSON.stringify(options.body)
-    }
-  }
+  options = augment(options)
 
   var xhr
   function ready () {

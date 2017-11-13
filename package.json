@@ -18,6 +18,7 @@
   "browser": "browser.js",
   "files": [
     "200.js",
+    "augment.js",
     "browser.js",
     "index.js",
     "parsers.js"
