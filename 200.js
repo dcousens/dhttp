@@ -6,7 +6,7 @@ module.exports = function only200 (options, callback) {
     if (err) return callback(err)
     if (result.statusCode !== 200) {
       var message = result.body
-      if (message === undefined) message = httpStatus.getStatusText(result.statusCode)
+      if (!message) message = httpStatus.getStatusText(result.statusCode)
 
       return callback(new Error(message))
     }
