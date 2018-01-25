@@ -4,7 +4,7 @@ var httpStatus = require('http-status-codes')
 module.exports = function only200 (options, callback) {
   dhttp(options, function (err, result) {
     if (err) return callback(err)
-    if (result.statusCode !== 200) {
+    if (result.statusCode !== 200 && result.statusCode !== 201) {
       var message = result.body
       if (!message) message = httpStatus.getStatusText(result.statusCode)
 
