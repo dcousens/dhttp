@@ -1,6 +1,6 @@
 {
   "name": "dhttp",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "Just another biased browserify-compatible HTTP/HTTPS wrapper",
   "author": "Daniel Cousens",
   "license": "MIT",
