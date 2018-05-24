@@ -30,5 +30,13 @@ module.exports = function augment (options) {
     options.body = JSON.stringify(options.body)
   }
 
+  if (options.auth) {
+    if (typeof options.auth !== 'string') {
+      options.auth = options.auth.user + ':' + options.auth.pass
+    }
+
+    options.headers['Authorization'] = 'Basic ' + Buffer.from(options.auth, 'utf8').toString('base64')
+  }
+
   return options
 }
