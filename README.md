@@ -10,10 +10,11 @@ No compatability with IE.
 
 Automatically parses `application/json`, `text/(plain|html)` and `application/octet-stream`,  use overrides for others.
 
+
 ## Example
 
 ``` javascript
-var dhttp = require('dhttp')
+let dhttp = require('dhttp')
 
 // ...
 dhttp({
@@ -34,18 +35,16 @@ dhttp({
 })
 ```
 
-Use optional overrides to force a `content-type`.
+Use optional `json`, `text` or `raw` overrides to *force* response body parsing irrespective of `content-type`.
 
 ``` javascript
-var dhttp = require('dhttp')
+let dhttp = require('dhttp')
 
 // ...
 dhttp({
   method: 'GET',
   url: 'http://localhost:8000',
-  json: true, // optional, `true` parses `body` as a JSON object
-  text: false, // optional, `true` parses `body` as UTF8 text
-  raw: false, // optional, `true` returns `body` as a `Buffer`
+  json: true, // force `res.body` as JSON
 }, function (err, res) {
   if (err) return
   if (res.statusCode !== 200) return
@@ -64,7 +63,7 @@ dhttp({
 To bypass `statusCode` handling, you can use `dhttp/200` which throws a descriptive error for any `statusCode` other than 200.
 
 ``` javascript
-var dhttp = require('dhttp/200')
+let dhttp = require('dhttp/200')
 // ...
 ```
 
