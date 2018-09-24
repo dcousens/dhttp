@@ -35,7 +35,7 @@ dhttp({
 })
 ```
 
-To bypass `statusCode` handling, you can use `dhttp/200` which throws a descriptive error for any `statusCode` other than 200.
+To bypass `statusCode` handling, you can use `dhttp/200` which throws a descriptive error for any `statusCode` other than 200 using [`http-status-codes`](https://github.com/prettymuchbryce/node-http-status).
 
 ``` javascript
 let dhttp = require('dhttp/200')
