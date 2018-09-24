@@ -12,7 +12,9 @@ const vectors = [
   { path: '/buffer', value: TENS },
   { path: '/echo', method: 'POST', body: { foo: 1 }, value: { foo: 1 } },
   { path: '/echo', method: 'POST', body: [ 1 ], value: [ 1 ] },
-  { path: '/echo/raw', method: 'POST', body: TENS, value: TENS }
+  { path: '/echo/raw', method: 'POST', body: TENS, value: TENS },
+  { path: '/echo', method: 'POST', body: '{"foo":1}', headers: { 'content-type': 'application/json' }, value: { foo: 1 } },
+  { path: '/echo', method: 'POST', body: { foo: 1 }, headers: { 'content-type': 'application/json' }, value: { foo: 1 } }
 ]
 
 app.get('/text', function (req, res) {
@@ -21,6 +23,13 @@ app.get('/text', function (req, res) {
 
 app.get('/json', function (req, res) {
   res.status(200).send({ 'foo': 'bar' })
+})
+
+app.get('/bad/json', function (req, res) {
+  res.status(200)
+  res.setHeader('Content-Type', 'application/json')
+  res.write('{ foo: bad }')
+  res.end()
 })
 
 app.get('/buffer', function (req, res) {
@@ -39,12 +48,13 @@ const server = http.createServer(app)
 server.listen(8080)
 
 tape('dhttp', function (t) {
-  t.plan(3 * vectors.length + 2)
+  t.plan(3 * vectors.length + 2 + 3)
 
   vectors.forEach((v) => {
     dhttp({
       method: v.method || 'GET',
       url: 'http://localhost:8080' + v.path,
+      headers: v.headers,
       body: v.body
     }, function (err, res) {
       t.error(err)
@@ -59,6 +69,17 @@ tape('dhttp', function (t) {
   }, function (err, res) {
     t.error(err)
     t.equal(res.statusCode, 404)
+  })
+
+  dhttp({
+    method: 'GET',
+    url: 'http://localhost:8080/bad/json'
+  }, function (err, res) {
+    t.ok(err)
+    t.throws(() => {
+      throw err
+    }, /Unexpected token f/)
+    t.equal(res, undefined)
   })
 })
 
