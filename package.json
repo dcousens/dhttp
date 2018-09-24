@@ -37,8 +37,10 @@
     "parse-headers": "^2.0.1"
   },
   "devDependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
     "nyc": "^6.4.0",
     "standard": "*",
-    "tape": "^4.6.2"
+    "tape": "^4.9.1"
   }
 }
