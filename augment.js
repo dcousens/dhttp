@@ -1,5 +1,5 @@
-var url = require('url')
-var CONTENT_TYPE_MAP = {
+const url = require('url')
+const CONTENT_TYPE_MAP = {
   'buffer': 'application/octet-stream',
   'object': 'application/json',
   'number': 'application/json',
@@ -16,18 +16,21 @@ module.exports = function augment (options) {
 
   if (options.body === undefined) return options
 
-  var typeOf = typeof options.body
-  if (Buffer.isBuffer(options.body)) typeOf = 'buffer'
+  let typeOf = typeof options.body
+  if (Buffer.isBuffer(options.body)) {
+    typeOf = 'buffer'
+  }
 
   options.headers = options.headers || {}
   if (!options.headers['content-type']) {
-    // don't mutate
     options.headers = Object.assign({}, options.headers)
     options.headers['content-type'] = CONTENT_TYPE_MAP[typeOf]
   }
 
-  if (typeOf === 'object' || typeOf === 'number') {
-    options.body = JSON.stringify(options.body)
+  if (options.headers['content-type'] === 'application/json') {
+    if (typeof options.body !== 'string') {
+      options.body = JSON.stringify(options.body)
+    }
   }
 
   return options
