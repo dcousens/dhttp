@@ -48,7 +48,7 @@ const server = http.createServer(app)
 server.listen(8080)
 
 tape('dhttp', function (t) {
-  t.plan(3 * vectors.length + 2 + 3)
+  t.plan(3 * vectors.length + 2 + 3 + 1)
 
   vectors.forEach((v) => {
     dhttp({
@@ -80,6 +80,16 @@ tape('dhttp', function (t) {
       throw err
     }, /Unexpected token f/)
     t.equal(res, undefined)
+  })
+
+  dhttp({
+    method: 'GET',
+    url: 'http://255.255.255.0/',
+    timeout: 500
+  }, function (err, res) {
+    t.throws(() => {
+      throw err
+    }, /ETIMEDOUT/)
   })
 })
 
