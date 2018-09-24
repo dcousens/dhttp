@@ -35,31 +35,6 @@ dhttp({
 })
 ```
 
-Use optional `json`, `text` or `raw` overrides to *force* response body parsing irrespective of `content-type`.
-
-``` javascript
-let dhttp = require('dhttp')
-
-// ...
-dhttp({
-  method: 'GET',
-  url: 'http://localhost:8000',
-  json: true, // force `res.body` as JSON
-}, function (err, res) {
-  if (err) return
-  if (res.statusCode !== 200) return
-
-  // the content-type was actually an octet-stream!
-  if (res.headers['content-type'] !== 'application/octet-stream') return
-
-  // no fear
-  console.log(res.body)
-  // => { foo: 'bar' }, a [force] parsed JSON object
-
-  // ...
-})
-```
-
 To bypass `statusCode` handling, you can use `dhttp/200` which throws a descriptive error for any `statusCode` other than 200.
 
 ``` javascript
