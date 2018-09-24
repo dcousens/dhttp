@@ -32,6 +32,13 @@ app.get('/bad/json', function (req, res) {
   res.end()
 })
 
+app.get('/bad/content', function (req, res) {
+  res.status(200)
+  res.setHeader('Content-Type', 'ohno')
+  res.write('foobar')
+  res.end()
+})
+
 app.get('/buffer', function (req, res) {
   res.status(200).send(TENS)
 })
@@ -48,7 +55,7 @@ const server = http.createServer(app)
 server.listen(8080)
 
 tape('dhttp', function (t) {
-  t.plan(3 * vectors.length + 2 + 3 + 1)
+  t.plan(3 * vectors.length + 2 + 3 + 3 + 1)
 
   vectors.forEach((v) => {
     dhttp({
@@ -80,6 +87,15 @@ tape('dhttp', function (t) {
       throw err
     }, /Unexpected token f/)
     t.equal(res, undefined)
+  })
+
+  dhttp({
+    method: 'GET',
+    url: 'http://localhost:8080/bad/content'
+  }, function (err, res) {
+    t.error(err)
+    t.equal(res.statusCode, 200)
+    t.equal(res.body, null)
   })
 
   dhttp({
