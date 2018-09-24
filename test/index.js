@@ -5,6 +5,16 @@ const tape = require('tape')
 const app = express()
 const http = require('http')
 
+const TENS = Buffer.alloc(99, 10) // 99x 10's
+const vectors = [
+  { path: '/text', value: 'foobar' },
+  { path: '/json', value: { 'foo': 'bar' } },
+  { path: '/buffer', value: TENS },
+  { path: '/echo', method: 'POST', body: { foo: 1 }, value: { foo: 1 } },
+  { path: '/echo', method: 'POST', body: [ 1 ], value: [ 1 ] },
+  { path: '/echo/raw', method: 'POST', body: TENS, value: TENS }
+]
+
 app.get('/text', function (req, res) {
   res.status(200).send('foobar')
 })
@@ -14,7 +24,11 @@ app.get('/json', function (req, res) {
 })
 
 app.get('/buffer', function (req, res) {
-  res.status(200).send(Buffer.alloc(10, 15))
+  res.status(200).send(TENS)
+})
+
+app.post('/echo/raw', require('body-parser').raw(), function (req, res) {
+  res.status(200).send(req.body)
 })
 
 app.post('/echo', require('body-parser').json(), function (req, res) {
@@ -23,14 +37,6 @@ app.post('/echo', require('body-parser').json(), function (req, res) {
 
 const server = http.createServer(app)
 server.listen(8080)
-
-const vectors = [
-  { path: '/text', value: 'foobar' },
-  { path: '/json', value: { 'foo': 'bar' } },
-  { path: '/buffer', value: Buffer.alloc(10, 15) },
-  { path: '/echo', method: 'POST', body: { foo: 1 }, value: { foo: 1 } },
-  { path: '/echo', method: 'POST', body: [ 1 ], value: [ 1 ] }
-]
 
 tape('dhttp', function (t) {
   t.plan(3 * vectors.length + 2)
