@@ -1,13 +1,13 @@
-var parsers = require('./parsers')
-var augment = require('./augment')
+const parsers = require('./parsers')
+const augment = require('./augment')
 
-var PROTOCOLS = {
+const PROTOCOLS = {
   'http:': require('http'),
   'https:': require('https')
 }
 
 module.exports = function request (options, callback) {
-  var timeout
+  let timeout
   function done (err, res) {
     if (timeout) clearTimeout(timeout)
     if (callback) callback(err, res)
@@ -16,33 +16,26 @@ module.exports = function request (options, callback) {
 
   options = augment(options)
 
-  var protocol
+  let protocol
   if (options.protocol !== undefined) {
     protocol = PROTOCOLS[options.protocol]
   }
 
-  var request = protocol.request(options, function (response) {
-    var length = response.headers['content-length']
+  const request = protocol.request(options, function (response) {
+    const length = response.headers['content-length']
     if (options.limit && length > options.limit) return done(new Error('Content-Length exceeded limit'))
 
     function handle (err, body) {
       if (err) return done(err)
 
-      var result = {
+      done(null, {
         statusCode: response.statusCode,
         headers: response.headers,
         body: body || null
-      }
-
-      done(null, result)
+      })
     }
 
-    // override
-    if (options.json) return parsers.json(response, length, handle)
-    if (options.text) return parsers.text(response, length, handle)
-    if (options.raw) return parsers.raw(response, length, handle)
-
-    var contentType = response.headers['content-type']
+    const contentType = response.headers['content-type']
     if (contentType) {
       if (/application\/json/.test(contentType)) return parsers.json(response, length, handle)
       if (/text\/(plain|html)/.test(contentType)) return parsers.text(response, length, handle)

@@ -1,6 +1,6 @@
-var Buffer = require('buffer').Buffer
-var parseHeaders = require('parse-headers')
-var augment = require('./augment')
+const Buffer = require('buffer').Buffer
+const parseHeaders = require('parse-headers')
+const augment = require('./augment')
 
 function returnJSON (result, body, callback) {
   try {
@@ -24,7 +24,7 @@ function returnRaw (result, body, callback) {
 }
 
 module.exports = function request (options, callback) {
-  var timeout
+  let timeout
   function done (err, res) {
     if (timeout) clearTimeout(timeout)
     if (callback) callback(err, res)
@@ -33,32 +33,27 @@ module.exports = function request (options, callback) {
 
   options = augment(options)
 
-  var xhr
+  let xhr
   function ready () {
     if (this.readyState < 2) return
 
-    var headers = xhr.getAllResponseHeaders()
+    let headers = xhr.getAllResponseHeaders()
     headers = parseHeaders(headers)
 
-    var length = headers['content-length']
+    const length = headers['content-length']
     if (options.limit && length > options.limit) return done(new Error('Content-Length exceeded limit'))
 
     if (this.readyState !== 4) return
     if (xhr.status === 0) return done(new Error('ETIMEDOUT'))
 
-    var body = Buffer.from(xhr.response || '')
-    var result = {
+    const body = Buffer.from(xhr.response || '')
+    const result = {
       body: null,
       headers: headers,
       statusCode: xhr.status
     }
 
-    // override
-    if (options.json) return returnJSON(result, body, done)
-    else if (options.text) return returnUTF8(result, body, done)
-    else if (options.raw) return returnRaw(result, body, done)
-
-    var contentType = headers['content-type']
+    const contentType = headers['content-type']
     if (contentType) {
       if (/application\/json/.test(contentType)) return returnJSON(result, body, done)
       if (/text\/(plain|html)/.test(contentType)) return returnUTF8(result, body, done)
@@ -80,11 +75,10 @@ module.exports = function request (options, callback) {
   xhr.onreadystatechange = ready
   xhr.onerror = done
   xhr.responseType = 'arraybuffer'
-
   xhr.open(options.method, options.url, true)
 
   if (options.headers !== undefined && xhr.setRequestHeader) {
-    for (var key in options.headers) {
+    for (const key in options.headers) {
       xhr.setRequestHeader(key, options.headers[key])
     }
   }
