@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "browserify": "^16.2.3",
-    "nyc": "^6.4.0",
+    "nyc": "^13.1.0",
     "standard": "*",
     "tape": "^4.9.1",
     "typeforce": "^1.16.0"
