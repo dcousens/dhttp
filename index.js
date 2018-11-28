@@ -27,11 +27,12 @@ module.exports = function request (options, callback) {
 
     function handle (err, body) {
       if (err) return done(err)
+      if (body === undefined) body = null
 
       done(null, {
         statusCode: response.statusCode,
         headers: response.headers,
-        body: body || null
+        body: body
       })
     }
 

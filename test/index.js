@@ -2,7 +2,6 @@ const dhttp = require('../')
 const tape = require('tape')
 const tf = require('typeforce')
 
-const EMPTY_TYPE = tf.value(null)
 const JSON_TYPE = tf.compile({
   slideshow: {
     slides: tf.arrayOf({ title: tf.String }, { length: 2 })
@@ -19,15 +18,15 @@ const ECHO_TYPE = tf.compile({
 })
 
 const vectors = [
+  { path: '/status/200', statusCode: 200, type: tf.value('') },
+  { path: '/status/300', statusCode: 300, type: tf.value('') },
+  { path: '/status/404', statusCode: 404, type: tf.value('') },
   { path: '/json', type: JSON_TYPE },
   { path: '/bytes/4', type: tf.BufferN(4) },
   { path: '/bytes/30', type: tf.BufferN(30) },
   { path: '/stream-bytes/40', type: tf.BufferN(40) },
-  { path: '/delay/6', statusCode: 200, type: ECHO_TYPE },
-  { path: '/status/200', statusCode: 200, type: EMPTY_TYPE },
-  { path: '/status/300', statusCode: 300, type: EMPTY_TYPE },
-  { path: '/status/404', statusCode: 404, type: EMPTY_TYPE },
-  { path: '/stream/3', errorRegex: /Unexpected token {/ }
+  { path: '/stream/3', errorRegex: /Unexpected token {/ },
+  { path: '/delay/9', statusCode: 200, type: ECHO_TYPE }
 ]
 
 vectors.forEach((v) => {
