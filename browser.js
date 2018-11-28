@@ -1,5 +1,4 @@
 const Buffer = require('buffer').Buffer
-const parseHeaders = require('parse-headers')
 const augment = require('./augment')
 
 function returnJSON (result, body, callback) {
@@ -37,8 +36,16 @@ module.exports = function request (options, callback) {
   function ready () {
     if (this.readyState < 2) return
 
-    let headers = xhr.getAllResponseHeaders()
-    headers = parseHeaders(headers)
+    let headers = {}
+    xhr.getAllResponseHeaders()
+      .split('\r\n')
+      .forEach(function (header) {
+        const i = header.indexOf(':')
+        if (i === -1) return
+
+        const key = header.substr(0, i).toLowerCase()
+        headers[key] = header.substr(i)
+      })
 
     const length = headers['content-length']
     if (options.limit && length > options.limit) return done(new Error('Content-Length exceeded limit'))
