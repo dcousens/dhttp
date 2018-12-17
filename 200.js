@@ -1,5 +1,5 @@
 var dhttp = require('./')
-var httpStatus = require('statuses/codes')
+var httpStatus = require('statuses/codes.json')
 
 module.exports = function only200 (options, callback) {
   dhttp(options, function (err, result) {
