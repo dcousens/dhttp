@@ -1,5 +1,7 @@
 # dhttp
 
+# DEPRECATED: not maintained, newer alternatives exist, don't use this
+
 [![TRAVIS](https://secure.travis-ci.org/dcousens/dhttp.png)](http://travis-ci.org/dcousens/dhttp)
 [![NPM](http://img.shields.io/npm/v/dhttp.svg)](https://www.npmjs.org/package/dhttp)
 
